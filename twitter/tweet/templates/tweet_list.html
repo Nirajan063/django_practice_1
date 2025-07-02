@@ -2,24 +2,35 @@
 
 {% block title %}
     Twitter-Clone
-{% endblock  %}
+{% endblock %}
 
 {% block content %}
-    <h1 class="text-center mt-4"> Welcome To Twitter Clone </h1>
-    <a class="btn btn-primary mb-4" href="{% url 'tweet_create' %}">Create a Tweet</a>
-    <div class="container row gap-3">
-        {% for tweet in tweets %}
-         <div class="card" style="width: 18rem;">
-        <img src="{{tweets.photo.url}}" class="card-img-top" alt="photo" width="300" >
-        <div class="card-body">
-        <h5 class="card-title">{{tweet.user.username}}</h5>
-        <p class="card-text text-blue-500 text-base mb-2">{{tweet.text}}</p>
-        {% if tweet.user == user %}
-         <a href="{% url "tweet_edit" tweet.id %}" class="btn btn-primary">Edit</a>
-         <a href="{% url "tweet_delete" tweet.id %}" class="btn btn-danger">Delete</a>
-         {% endif %}
+    <h1 class="text-center mt-4">Welcome To Twitter Clone</h1>
+    <div class="text-end mb-3 container">
+        <a class="btn btn-primary" href="{% url 'tweet_create' %}">Create a Tweet</a>
+    </div>
+
+    <div class="container">
+        <div class="row justify-content-center">
+            {% for tweet in tweets %}
+                <div class="col-12 col-md-8 mb-4">  <!-- Centered card, 8/12 wide on medium screens -->
+                    <div class="card shadow rounded">
+                        {% if tweet.photo %}
+                            <img src="{{ tweet.photo.url }}" class="card-img-top" alt="photo">
+                        {% else %}
+                            <img src="https://via.placeholder.com/600x300?text=No+Image" class="card-img-top" alt="No image">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">{{ tweet.user.username }}</h5>
+                            <p class="card-text text-primary mb-2">{{ tweet.text }}</p>
+                            {% if tweet.user == user %}
+                                <a href="{% url 'tweet_edit' tweet.id %}" class="btn btn-primary btn-sm">Edit</a>
+                                <a href="{% url 'tweet_delete' tweet.id %}" class="btn btn-danger btn-sm">Delete</a>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
         </div>
     </div>
-        {% endfor %}
-    </div>
-{% endblock  %}
+{% endblock %}
