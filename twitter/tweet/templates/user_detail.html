@@ -1,0 +1,18 @@
+{% extends 'layout.html' %}
+{% block title %}{{ user.username }}'s Profile{% endblock %}
+
+{% block content %}
+  <h2 class="mt-4">{{ user.username }}'s Tweets</h2>
+  {% if tweets %}
+    <ul class="list-group mt-3">
+      {% for tweet in tweets %}
+        <li class="list-group-item">
+          {{ tweet.text }}
+          <br><small class="text-muted">{{ tweet.created_at }}</small>
+        </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No tweets to show.</p>
+  {% endif %}
+{% endblock %}
