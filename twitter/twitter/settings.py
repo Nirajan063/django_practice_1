@@ -3,18 +3,18 @@ Django settings for twitter project.
 """
 
 import os
-import dj_database_url  # ✅ Added for Render deployment
 from pathlib import Path
 
-# Build paths inside the project like this: BASE_DIR / 'subdir'.
+# Build paths inside the project
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-# Quick-start development settings - unsuitable for production
-SECRET_KEY = 'django-insecure-2t00#3v0x3lv_gd2tm+k(onz9qdu-+g$y9btp6!a_-96!3w04&'
+# SECURITY WARNING: keep the secret key secret in production
+SECRET_KEY = os.getenv('DJANGO_SECRET_KEY', 'unsafe-dev-key')
 
-DEBUG = True
+# SECURITY WARNING: don't run with debug on in production
+DEBUG = False
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ['*']  # You can set specific domain later
 
 # Application definition
 INSTALLED_APPS = [
@@ -59,11 +59,10 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'twitter.wsgi.application'
 
-# Default local database
+# 🚫 NO DATABASE (Skip migrations)
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.dummy'
     }
 }
 
@@ -89,18 +88,19 @@ TIME_ZONE = 'UTC'
 USE_I18N = True
 USE_TZ = True
 
-# Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+# ✅ Static files
+STATIC_URL = '/static/'
 STATICFILES_DIRS = [os.path.join(BASE_DIR, 'staticfiles')]
-STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')  # ✅ Required for collectstatic
+STATIC_ROOT = os.path.join(BASE_DIR, 'static')
 
+# ✅ Media files
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 
 # Default primary key field type
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# Django REST framework settings
+# Django REST Framework
 REST_FRAMEWORK = {
     'DEFAULT_RENDERER_CLASSES': [
         'rest_framework.renderers.JSONRenderer',
@@ -108,17 +108,10 @@ REST_FRAMEWORK = {
     ]
 }
 
-# Login redirection
+# Authentication
 LOGIN_URL = '/accounts/login'
 LOGIN_REDIRECT_URL = '/tweet/'
 LOGOUT_REDIRECT_URL = '/tweet/'
 
-# ✅ Render deployment-specific settings
-DATABASES['default'] = dj_database_url.config(default='sqlite:///db.sqlite3')
-
-# Use secure proxy header (Render uses reverse proxy)
+# For Railway deployment (HTTPS headers)
 SECURE_PROXY_SSL_HEADER = ('HTTP_X_FORWARDED_PROTO', 'https')
-
-# Add Render’s external hostname to allowed hosts automatically
-if os.environ.get('RENDER'):
-    ALLOWED_HOSTS.append(os.environ['RENDER_EXTERNAL_HOSTNAME'])
