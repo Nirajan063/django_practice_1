@@ -25,6 +25,8 @@ urlpatterns = [
     path('tweet/', include('tweet.urls')),
     path('accounts/', include('django.contrib.auth.urls')),
     path('', include('tweet.urls')),
+    path('api/', include('tweetapi.urls')),
+
 ] 
 
 if settings.DEBUG:
